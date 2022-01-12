@@ -29,7 +29,12 @@ rl.on('line', reply => {
                 break;
 
             case 'current weather':
-                console.log(`Current weather in ${cb.entities.city} : `);
+                rl.setPrompt('');
+                weather(cb.entities.city).then(res => {
+                    console.log(`Current weather in ${res.name} is ${(res.main.temp-273.15).toFixed(1)}°C`);
+                    rl.setPrompt('> ');
+                    rl.prompt();
+                });
                 break;
     
             default:
