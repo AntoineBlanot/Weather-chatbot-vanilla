@@ -31,7 +31,8 @@ rl.on('line', reply => {
             case 'current weather':
                 rl.setPrompt('');
                 weather(cb.entities.city).then(res => {
-                    console.log(`Current weather in ${res.name} is ${(res.main.temp-273.15).toFixed(1)}°C`);
+                    var temp = res.main.temp - 273.15;
+                    console.log(`It is ${getTemperatureExpression(temp)} in ${res.name}, with ${temp.toFixed(1)}°C.`);
                     rl.setPrompt('> ');
                     rl.prompt();
                 });
@@ -43,3 +44,21 @@ rl.on('line', reply => {
     });
     rl.prompt();
 });
+
+let getTemperatureExpression = (temp) => {
+    if (temp < -10){
+        return "glacial";
+    } else if (temp < 0){
+        return "very cold";
+    } else if (temp < 10){
+        return "cold";
+    } else if (temp < 20){
+        return "agreable";
+    } else if (temp < 30){
+        return "hot";
+    } else if (temp < 40){
+        return "very hot";
+    } else {
+        return "extremely hot";
+    }
+}
