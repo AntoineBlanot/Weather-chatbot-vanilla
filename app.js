@@ -1,5 +1,7 @@
 'use strict';
 
+var jp = require('jsonpath');
+
 const Readline = require('readline'); // for including readline module in app
 const rl = Readline.createInterface({ // for reading inputs
     input : process.stdin,
@@ -24,15 +26,25 @@ rl.on('line', reply => {
                 console.log('You want to exit');
                 process.exit();
 
-            case 'get weather':
-                console.log(`Weather in ${cb.entities.city} at ${cb.entities.time} is :`);
-                break;
-
             case 'current weather':
                 rl.setPrompt('');
-                weather(cb.entities.city).then(res => {
+                weather.getWeather(cb.entities.city).then(res => {
                     var temp = res.main.temp - 273.15;
                     console.log(`It is ${getTemperatureExpression(temp)} in ${res.name}, with ${temp.toFixed(1)}°C.`);
+                    rl.setPrompt('> ');
+                    rl.prompt();
+                });
+                break;
+            
+            case 'forecast weather':
+                rl.setPrompt('');
+                weather.getForecast(cb.entities.city).then(res => {
+                    var date = getDate(cb.entities.time);
+                    var temp = jp.query(res, `$.list[?(@.dt_txt == "${date}")].main.temp`)[0]; // jsonpath query
+                    
+                    temp = temp - 273.15;
+                    console.log(`In ${res.city.name} ${cb.entities.time}, it is ${temp.toFixed(1)}°C (data from ${date})`);
+                    
                     rl.setPrompt('> ');
                     rl.prompt();
                 });
@@ -61,4 +73,40 @@ let getTemperatureExpression = (temp) => {
     } else {
         return "extremely hot";
     }
+}
+
+let getDate = (str) => {
+
+    // new Date object
+    let date_ob = new Date();
+
+    var stamp;
+
+    if (str == 'today'){
+        stamp = 0 
+    } else if (str == 'tomorrow'){
+        stamp = 1
+    } else {
+        stamp = 40 // a redéfinir, cas ou l'utilisateur ne rentre ni today ni tomorrow (in x days par ex)
+    }
+
+    // adjust 0 before single digit date
+    let day = ("0" + (date_ob.getDate() + stamp) % 30).slice(-2);
+
+    // current month
+    let month = ("0" + (date_ob.getMonth() + 1 + Math.floor((date_ob.getDate() + stamp)/30))).slice(-2);
+
+    // current year
+    let year = date_ob.getFullYear();
+
+    // current hours
+    let hours = ("0" + (date_ob.getHours() + (date_ob.getHours() % 3))).slice(-2)
+
+    if (parseInt(hours) > 24)
+    {
+        hours = "00";
+        day = ("0" + (parseInt(day) + 1)).slice(-2);
+    }
+
+    return `${year}-${month}-${day} ${hours}:00:00`
 }

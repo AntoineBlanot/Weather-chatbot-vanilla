@@ -23,4 +23,28 @@ const getWeather = location => {
   }); 
 }
 
-module.exports = getWeather;
+const getForecast = (location, n_forecast = 0) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const weatherConditions = await axios.get('https://api.openweathermap.org/data/2.5/forecast',
+
+            {
+                params : {
+                    q: location,
+                    cnt: n_forecast, // number of forecasts (1 forecast every 3h, max 5 days of forecast), if 0 then equal 40 (max)
+                    appid: apikey
+            }
+        });
+
+        resolve(weatherConditions.data) // returns back the results to the chatbot
+        
+    }
+    catch (error) {
+        reject(error);
+    }
+  }); 
+}
+
+module.exports = { 
+    getWeather, getForecast
+};
