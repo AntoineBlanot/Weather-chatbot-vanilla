@@ -1,5 +1,6 @@
 'use strict';
 
+const { Console } = require('console');
 var jp = require('jsonpath');
 
 const Readline = require('readline'); // for including readline module in app
@@ -13,6 +14,7 @@ const matcher = require('./matcher'); // matcher module
 const weather = require('./weather'); // weather module
 
 rl.setPrompt('> ');
+console.log("\x1b[33m",'\n--- Welcome user! How can I help you today? ---\n',"\x1b[0m");
 rl.prompt();
 rl.on('line', reply => {
     matcher(reply , cb => {
@@ -30,7 +32,8 @@ rl.on('line', reply => {
                 rl.setPrompt('');
                 weather.getWeather(cb.entities.city).then(res => {
                     var temp = res.main.temp - 273.15;
-                    console.log(`It is ${getTemperatureExpression(temp)} in ${res.name}, with ${temp.toFixed(1)}°C.`);
+                    console.log("\x1b[31m",`It is ${getTemperatureExpression(temp)} in ${res.name}, with ${temp.toFixed(1)}°C.\n`,"\x1b[0m");
+                    //console.log("\x1b[0m")
                     rl.setPrompt('> ');
                     rl.prompt();
                 });
@@ -43,8 +46,8 @@ rl.on('line', reply => {
                     var temp = jp.query(res, `$.list[?(@.dt_txt == "${date}")].main.temp`)[0]; // jsonpath query
                     
                     temp = temp - 273.15;
-                    console.log(`In ${res.city.name} ${cb.entities.time}, it is ${temp.toFixed(1)}°C (data from ${date})`);
-                    
+                    console.log(`In ${res.city.name} ${cb.entities.time}, it will be ${temp.toFixed(1)}°C (data from ${date})\n`,"\x1b[0m");
+                    //console.log("\x1b[0m")
                     rl.setPrompt('> ');
                     rl.prompt();
                 });
