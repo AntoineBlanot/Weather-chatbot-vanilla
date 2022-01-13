@@ -31,7 +31,9 @@ rl.on('line', reply => {
             case 'temperature current':
                 rl.setPrompt('');
                 weather.getWeather(cb.entities.city).then(res => {
+
                     var temp = res.main.temp - 273.15;
+
                     console.log("\x1b[31m",`It is ${getTemperatureExpression(temp)} in ${res.name}, with ${temp.toFixed(1)}°C.\n`,"\x1b[0m");
                     //console.log("\x1b[0m")
                     rl.setPrompt('> ');
@@ -42,17 +44,32 @@ rl.on('line', reply => {
             case 'temperature forecast':
                 rl.setPrompt('');
                 weather.getForecast(cb.entities.city).then(res => {
+
                     var date = getDate(cb.entities.time);
                     var temp = jp.query(res, `$.list[?(@.dt_txt == "${date}")].main.temp`)[0]; // jsonpath query
-                    
                     temp = temp - 273.15;
+
                     console.log(`In ${res.city.name} ${cb.entities.time}, it will be ${getTemperatureExpression(temp)} with ${temp.toFixed(1)}°C (data from ${date})\n`,"\x1b[0m");
                     //console.log("\x1b[0m")
                     rl.setPrompt('> ');
                     rl.prompt();
                 });
                 break;
-    
+
+            case 'weather forecast':
+                rl.setPrompt('');
+                weather.getForecast(cb.entities.city).then(res => {
+
+                    var date = getDate(cb.entities.time);
+                    var desc = jp.query(res, `$.list[?(@.dt_txt == "${date}")].weather.*.description`)[0]; // jsonpath query
+                    var sep = desc[-1] == 's' ? '' : 'a ';
+                    
+                    console.log(`In ${res.city.name} ${cb.entities.time}, there will be ${sep}${desc} (data from ${date})\n`,"\x1b[0m");
+                    //console.log("\x1b[0m")
+                    rl.setPrompt('> ');
+                    rl.prompt();
+                });
+                break;
             default:
                 console.log('I did not understand your resquest, please try again');
         }
