@@ -103,7 +103,7 @@ let getDate = (str) => {
     let year = date_ob.getFullYear();
 
     // current hours
-    let hours = ("0" + (date_ob.getHours() + (date_ob.getHours() % 3))).slice(-2)
+    let hours = ("0" + (date_ob.getHours() + 3 - (date_ob.getHours() % 3))).slice(-2)
 
     if (parseInt(hours) > 24)
     {
