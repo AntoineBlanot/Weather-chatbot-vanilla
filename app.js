@@ -28,7 +28,7 @@ rl.on('line', reply => {
                 console.log('You want to exit');
                 process.exit();
 
-            case 'weather current':
+            case 'temperature current':
                 rl.setPrompt('');
                 weather.getWeather(cb.entities.city).then(res => {
                     var temp = res.main.temp - 273.15;
@@ -39,7 +39,7 @@ rl.on('line', reply => {
                 });
                 break;
             
-            case 'weather forecast':
+            case 'temperature forecast':
                 rl.setPrompt('');
                 weather.getForecast(cb.entities.city).then(res => {
                     var date = getDate(cb.entities.time);
@@ -61,20 +61,20 @@ rl.on('line', reply => {
 });
 
 let getTemperatureExpression = (temp) => {
-    if (temp < -10){
-        return "glacial";
+    if (temp < -20){
+        return "freezing";
     } else if (temp < 0){
         return "very cold";
-    } else if (temp < 10){
+    } else if (temp < 15){
         return "cold";
     } else if (temp < 20){
-        return "agreable";
+        return "cool";
+    } else if (temp < 25){
+        return "warm";
     } else if (temp < 30){
         return "hot";
-    } else if (temp < 40){
-        return "very hot";
     } else {
-        return "extremely hot";
+        return "very hot";
     }
 }
 
