@@ -6,10 +6,10 @@ const patternDict = [{
         intent : 'Exit'
     }, {
         pattern : '\\b((weather\\s(like\\s)?)|(is\\sit\\s[a-z]+\\s))in\\s\\b(?<city>[A-Za-z]+\\s?([A-Za-z]+)?)\\s\\b(?<time>tomorrow|today)',
-        intent : 'forecast weather'
+        intent : 'weather forecast'
     }, {
         pattern : '\\b((weather\\s(like\\s)?)|(is\\sit\\s[a-z]+\\s))in\\s\\b(?<city>[A-Za-z]+\\s?([A-Za-z]+)?)',
-        intent : 'current weather'
+        intent : 'weather current'
     }];
     
 module.exports = patternDict;

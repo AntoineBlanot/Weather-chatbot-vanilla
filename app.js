@@ -28,7 +28,7 @@ rl.on('line', reply => {
                 console.log('You want to exit');
                 process.exit();
 
-            case 'current weather':
+            case 'weather current':
                 rl.setPrompt('');
                 weather.getWeather(cb.entities.city).then(res => {
                     var temp = res.main.temp - 273.15;
@@ -39,14 +39,14 @@ rl.on('line', reply => {
                 });
                 break;
             
-            case 'forecast weather':
+            case 'weather forecast':
                 rl.setPrompt('');
                 weather.getForecast(cb.entities.city).then(res => {
                     var date = getDate(cb.entities.time);
                     var temp = jp.query(res, `$.list[?(@.dt_txt == "${date}")].main.temp`)[0]; // jsonpath query
                     
                     temp = temp - 273.15;
-                    console.log(`In ${res.city.name} ${cb.entities.time}, it will be ${temp.toFixed(1)}°C (data from ${date})\n`,"\x1b[0m");
+                    console.log(`In ${res.city.name} ${cb.entities.time}, it will be ${getTemperatureExpression(temp)} with ${temp.toFixed(1)}°C (data from ${date})\n`,"\x1b[0m");
                     //console.log("\x1b[0m")
                     rl.setPrompt('> ');
                     rl.prompt();
