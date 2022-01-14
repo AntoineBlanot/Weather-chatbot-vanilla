@@ -33,9 +33,10 @@ rl.on('line', reply => {
                 weather.getWeather(cb.entities.city).then(res => {
 
                     var temp = res.main.temp - 273.15;
+                    var temp_style = getTemperatureStyle(temp);
 
-                    console.log("\x1b[31m",`It is ${getTemperatureExpression(temp)} in ${res.name}, with ${temp.toFixed(1)}°C.\n`,"\x1b[0m");
-                    //console.log("\x1b[0m")
+                    console.log(`It is \x1b[1m\x1b[5m${getTemperatureExpression(temp)} in ${res.name}, with \x1b[1m\x1b[5m${temp_style}${temp.toFixed(1)}°C\x1b[0m.\n`);
+                    
                     rl.setPrompt('> ');
                     rl.prompt();
                 });
@@ -48,9 +49,10 @@ rl.on('line', reply => {
                     var date = getDate(cb.entities.time);
                     var temp = jp.query(res, `$.list[?(@.dt_txt == "${date}")].main.temp`)[0]; // jsonpath query
                     temp = temp - 273.15;
+                    var temp_style = getTemperatureStyle(temp);
 
-                    console.log(`In ${res.city.name} ${cb.entities.time}, it will be ${getTemperatureExpression(temp)} with ${temp.toFixed(1)}°C (data from ${date})\n`,"\x1b[0m");
-                    //console.log("\x1b[0m")
+                    console.log(`In ${res.city.name} ${cb.entities.time}, it will be \x1b[1m\x1b[5m${getTemperatureExpression(temp)} with \x1b[1m\x1b[5m${temp_style}${temp.toFixed(1)}°C\x1b[0m (data from ${date})\n`);
+                    
                     rl.setPrompt('> ');
                     rl.prompt();
                 });
@@ -63,13 +65,39 @@ rl.on('line', reply => {
                     var date = getDate(cb.entities.time);
                     var desc = jp.query(res, `$.list[?(@.dt_txt == "${date}")].weather.*.description`)[0]; // jsonpath query
                     var sep = desc[-1] == 's' ? '' : 'a ';
+
+                    var temp = jp.query(res, `$.list[?(@.dt_txt == "${date}")].main.temp`)[0]; // jsonpath query
+                    temp = temp - 273.15;
                     
-                    console.log(`In ${res.city.name} ${cb.entities.time}, there will be ${sep}${desc} (data from ${date})\n`,"\x1b[0m");
-                    //console.log("\x1b[0m")
+                    var temp_style = getTemperatureStyle(temp);
+
+                    console.log(`In ${res.city.name} ${cb.entities.time}, the temperature is  \x1b[1m\x1b[5m${getTemperatureExpression(temp)} with (\x1b[1m\x1b[5m${temp_style}${temp.toFixed(1)}°C\x1b[0m). There will be \x1b[1m\x1b[5m${sep}${desc}\x1b[0m. (data from ${date})\n`);
+                    
                     rl.setPrompt('> ');
                     rl.prompt();
                 });
                 break;
+                case 'current weather':
+                    rl.setPrompt('');
+                    weather.getWeather(cb.entities.city).then(res => {
+    
+                        //var date = getDate(cb.entities.time);
+                        var desc = res.weather.description 
+                    
+                
+    
+                        var temp = res.main.temp - 273.15;
+                        var temp_style = getTemperatureStyle(temp);
+
+    
+                        //console.log(`In ${res.city.name} ${cb.entities.time}, the temperature is  \x1b[1m\x1b[5m${getTemperatureExpression(temp)} with (\x1b[1m\x1b[5m${temp_style}${temp.toFixed(1)}°C\x1b[0m). There will be \x1b[1m\x1b[5m${sep}${desc}\x1b[0m. (data from ${date})\n`);
+                        console.log(res.weather['description'])
+                        console.log(`It is \x1b[1m\x1b[5m${getTemperatureExpression(temp)} in ${res.name}, with \x1b[1m\x1b[5m${temp_style}${temp.toFixed(1)}°C\x1b[0m.\n`);
+                        
+                        rl.setPrompt('> ');
+                        rl.prompt();
+                    });
+                    break;
             default:
                 console.log('I did not understand your resquest, please try again');
         }
@@ -79,19 +107,19 @@ rl.on('line', reply => {
 
 let getTemperatureExpression = (temp) => {
     if (temp < -20){
-        return "freezing";
+        return "\x1b[36mfreezing\x1b[0m";
     } else if (temp < 0){
-        return "very cold";
-    } else if (temp < 15){
-        return "cold";
+        return "\x1b[36mvery cold\x1b[0m";
+    } else if (temp < 10){
+        return "\x1b[34mcold\x1b[0m";
     } else if (temp < 20){
-        return "cool";
+        return "\x1b[32mcool\x1b[0m";
     } else if (temp < 25){
-        return "warm";
+        return "\x1b[32mwarm\x1b[0m";
     } else if (temp < 30){
-        return "hot";
+        return "\x1b[33mhot\x1b[0m";
     } else {
-        return "very hot";
+        return "\x1b[31mvery hot\x1b[0m";
     }
 }
 
@@ -129,4 +157,22 @@ let getDate = (str) => {
     }
 
     return `${year}-${month}-${day} ${hours}:00:00`
+}
+
+let getTemperatureStyle = (temp) => {
+    if (temp < -20){
+        return "\x1b[36m";
+    } else if (temp < 0){
+        return "\x1b[36m";
+    } else if (temp < 10){
+        return "\x1b[34m";
+    } else if (temp < 20){
+        return "\x1b[32m";
+    } else if (temp < 25){
+        return "\x1b[32m";
+    } else if (temp < 30){
+        return "\x1b[33m";
+    } else {
+        return "\x1b[31m";
+    }
 }
