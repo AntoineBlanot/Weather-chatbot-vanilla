@@ -72,10 +72,10 @@ const patternDict = [{
     pattern : '\\b(air pollution)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>tomorrow)',
     intent :'Forecast air pollution'
     },{
-    pattern : '\\b(air pollution)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\d)\\s(?<hrs>days|hours)',
+    pattern : '\\b(air pollution)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
     intent : 'Forecast air pollution'
     },{
-    pattern : '\\b(air pollution)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\d)\\s(?<hrs>days|hours)',
+    pattern : '\\b(air pollution)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
     intent : 'Forecast air pollution'
 }]
 
