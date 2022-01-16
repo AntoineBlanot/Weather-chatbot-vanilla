@@ -42,9 +42,51 @@ const getForecast = (location, n_forecast = 0) => {
     catch (error) {
         reject(error);
     }
-  }); 
+});
 }
+    const getUVindex = (latitude,longitude) => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const weatherConditions = await axios.get('https://api.openweathermap.org/data/2.5/onecall',
+    
+                {
+                    params : {
+                        lat: latitude,
+                        lon: longitude, 
+                        appid: apikey
+                }
+            });
+    
+            resolve(weatherConditions.data) // returns back the results to the chatbot
+            
+        }
+        catch (error) {
+            reject(error);
+        }
+  });
+}
+  const getAirpollution = (latitude,longitude) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const weatherConditions = await axios.get('http://api.openweathermap.org/data/2.5/air_pollution?',
+
+            {
+                params : {
+                    lat: latitude,
+                    lon: longitude, 
+                    appid: apikey
+            }
+        });
+
+        resolve(weatherConditions.data) // returns back the results to the chatbot
+        
+    }
+    catch (error) {
+        reject(error);
+    }
+}); 
+  } 
 
 module.exports = { 
-    getWeather, getForecast
+    getWeather, getForecast, getUVindex, getAirpollution 
 };

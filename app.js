@@ -21,14 +21,14 @@ rl.on('line', reply => {
         switch(cb.intent){
 
             case 'Hello':
-                console.log(`${cb.entities.greeting} there`);
+                console.log(`${cb.entities.greeting} there ! Feel free to ask me about the temperature, weather or UV indice of any cities`);
                 break;
 
             case 'Exit':
-                console.log('You want to exit');
+                console.log('You have successfully left the channel');
                 process.exit();
 
-            case 'temperature current':
+            case 'current temperature':
                 rl.setPrompt('');
                 weather.getWeather(cb.entities.city).then(res => {
 
@@ -42,7 +42,7 @@ rl.on('line', reply => {
                 });
                 break;
             
-            case 'temperature forecast':
+            case 'forecast temperature':
                 rl.setPrompt('');
                 weather.getForecast(cb.entities.city).then(res => {
 
@@ -58,7 +58,7 @@ rl.on('line', reply => {
                 });
                 break;
 
-            case 'weather forecast':
+            case 'forecast weather':
                 rl.setPrompt('');
                 weather.getForecast(cb.entities.city).then(res => {
 
@@ -77,29 +77,74 @@ rl.on('line', reply => {
                     rl.prompt();
                 });
                 break;
-                case 'current weather':
-                    rl.setPrompt('');
-                    weather.getWeather(cb.entities.city).then(res => {
-    
-                        //var date = getDate(cb.entities.time);
-                        var desc = res.weather.description 
-                    
-                
-    
-                        var temp = res.main.temp - 273.15;
-                        var temp_style = getTemperatureStyle(temp);
+            case 'current weather':
+                rl.setPrompt('');
+                weather.getWeather(cb.entities.city).then(res => {
 
-    
-                        //console.log(`In ${res.city.name} ${cb.entities.time}, the temperature is  \x1b[1m\x1b[5m${getTemperatureExpression(temp)} with (\x1b[1m\x1b[5m${temp_style}${temp.toFixed(1)}°C\x1b[0m). There will be \x1b[1m\x1b[5m${sep}${desc}\x1b[0m. (data from ${date})\n`);
-                        console.log(res.weather['description'])
-                        console.log(`It is \x1b[1m\x1b[5m${getTemperatureExpression(temp)} in ${res.name}, with \x1b[1m\x1b[5m${temp_style}${temp.toFixed(1)}°C\x1b[0m.\n`);
-                        
-                        rl.setPrompt('> ');
-                        rl.prompt();
-                    });
-                    break;
+                    //var date = getDate(cb.entities.time);
+                    var desc = res.weather.description 
+                
+
+                    var temp = res.main.temp - 273.15;
+                    var temp_style = getTemperatureStyle(temp);
+
+
+                    //console.log(`In ${res.city.name} ${cb.entities.time}, the temperature is  \x1b[1m\x1b[5m${getTemperatureExpression(temp)} with (\x1b[1m\x1b[5m${temp_style}${temp.toFixed(1)}°C\x1b[0m). There will be \x1b[1m\x1b[5m${sep}${desc}\x1b[0m. (data from ${date})\n`);
+                    console.log(res.weather['description'])
+                    console.log(`It is \x1b[1m\x1b[5m${getTemperatureExpression(temp)} in ${res.name}, with \x1b[1m\x1b[5m${temp_style}${temp.toFixed(1)}°C\x1b[0m.\n`);
+                    
+                    rl.setPrompt('> ');
+                    rl.prompt();
+                });
+                break;
+            case 'uv index':
+                rl.setPrompt('');
+                weather.getWeather(cb.entities.city).then(res => {
+
+                   // var date = getDate(cb.entities.time);
+                    var long = res.coord.lon
+                    var lat = res.coord.lat
+                
+                    weather.getUVindex(lat,long).then(res =>{
+                    console.log(res.daily[0].uvi)
+                    // var desc = jp.query(res, `$.list[?(@.dt_txt == "${date}")].daily.uvi`)[0]; // jsonpath query
+                    // var sep = desc[-1] == 's' ? '' : 'a ';
+
+
+                    // console.log(`In ${res.city.name}, the UV ${sep}${desc}\x1b[0m. (data from ${date})\n`);
+        
+                    })
+                    rl.setPrompt('> ');
+                    rl.prompt(); 
+        
+                
+                });
+                break;
+            case 'air pollution':
+                rl.setPrompt('');
+                weather.getWeather(cb.entities.city).then(res => {
+
+                    const
+                    //var date = getDate(cb.entities.time);
+                    var long = res.coord.lon
+                    var lat = res.coord.lat
+                    const airPollutionLevels = ["Good", "Fair", "Moderate","Poor","Very Poor"];
+                    weather.getAirpollution(lat,long).then(res =>{
+                    
+                    var pollution=airPollutionLevels[res.list[0].main.aqi-1]
+                    var timestamp = res.list[0].dt*1000
+                    var date = new Date(timestamp);
+                    console.log(`In ${cb.entities.city}, the air pollution is ${pollution}\x1b[0m. (data from ${date.toLocaleString()})\n`);
+                    rl.setPrompt('> ');
+                    rl.prompt(); 
+                
+                     })
+
+                
+                });
+                break;
             default:
-                console.log('I did not understand your resquest, please try again');
+                console.log('I did not understand your resquest, please try again. accepted: [feature] [in] [city name]');
         }
     });
     rl.prompt();
