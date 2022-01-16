@@ -68,7 +68,7 @@ const getForecast = (location, n_forecast = 0) => {
   const getAirpollution = (latitude,longitude) => {
     return new Promise(async(resolve, reject) => {
         try {
-            const weatherConditions = await axios.get('http://api.openweathermap.org/data/2.5/air_pollution?',
+            const weatherConditions = await axios.get('http://api.openweathermap.org/data/2.5/air_pollution/forecast',
 
             {
                 params : {

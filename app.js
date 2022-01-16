@@ -12,6 +12,7 @@ const rl = Readline.createInterface({ // for reading inputs
 
 const matcher = require('./matcher'); // matcher module
 const weather = require('./weather'); // weather module
+const airPollutionLevels = ["Good", "Fair", "Moderate","Poor","Very Poor"]; //used for air pollution requests
 
 rl.setPrompt('> ');
 console.log("\x1b[33m",'\n--- Welcome user! How can I help you today? ---\n',"\x1b[0m");
@@ -123,7 +124,6 @@ rl.on('line', reply => {
                     //var date = getDate(cb.entities.time);
                     var long = res.coord.lon
                     var lat = res.coord.lat
-                    const airPollutionLevels = ["Good", "Fair", "Moderate","Poor","Very Poor"];
                     weather.getAirpollution(lat,long).then(res =>{
                     
                     var pollution=airPollutionLevels[res.list[0].main.aqi-1]
@@ -132,22 +132,47 @@ rl.on('line', reply => {
                     console.log(`In ${cb.entities.city}, the air pollution is ${pollution}\x1b[0m. (data from ${date.toLocaleString()})\n`);
                     rl.setPrompt('> ');
                     rl.prompt(); 
-                
                      })
 
                 
                 });
+                case 'Forecast tomorrow air pollution':
+                    rl.setPrompt('');
+                    weather.getWeather(cb.entities.city).then(res => {
+                        
+                        var long = res.coord.lon
+                        var lat = res.coord.lat
+                        
+                        weather.getAirpollution(lat,long).then(res =>{
+                     
+                        var pollution=airPollutionLevels[res.list[24].main.aqi-1] // we check the pollution for 24h after the current time research
+                        var timestamp = res.list[24].dt*1000
+                        var date = new Date(timestamp);
+                        console.log(`In ${cb.entities.city}, the air pollution is ${pollution}\x1b[0m. (data from ${date.toLocaleString()})\n`);
+                        rl.setPrompt('> ');
+                        rl.prompt(); 
+                    
+                         })
+    
+                    });   
+                break;
                 case 'Forecast air pollution':
                     rl.setPrompt('');
                     weather.getWeather(cb.entities.city).then(res => {
                         
                         var long = res.coord.lon
                         var lat = res.coord.lat
-                        const airPollutionLevels = ["Good", "Fair", "Moderate","Poor","Very Poor"];
+                        var pollutionIndex =0 
+                        if (cb.entities.hrs=='days'){
+                            pollutionIndex=24*cb.entities.time ;
+                        }
+                        else {
+                            pollutionIndex=cb.entities.time
+                        }
                         weather.getAirpollution(lat,long).then(res =>{
-                        
-                        var pollution=airPollutionLevels[res.list[cb.entities.hrs].main.aqi-1]
-                        var timestamp = res.list[0].dt*1000
+                     
+                        var pollution=airPollutionLevels[res.list[pollutionIndex].main.aqi-1] // we check the pollution for 24h after the current time research
+                        var timestamp = res.list[pollutionIndex].dt*1000
                         var date = new Date(timestamp);
                         console.log(`In ${cb.entities.city}, the air pollution is ${pollution}\x1b[0m. (data from ${date.toLocaleString()})\n`);
                         rl.setPrompt('> ');
