@@ -24,10 +24,10 @@ const patternDict = [{
     pattern : '\\b(weather)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>tomorrow)',
     intent : 'Forecast weather'
     },{
-    pattern : '\\b(weather)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\d)\\s(?<hrs>days|hours)',
+    pattern : '\\b(weather)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
     intent :'Forecast weather'
     },{
-    pattern : '\\b(weather)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\d)\\s(?<hrs>days|hours)',
+    pattern : '\\b(weather)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
     intent : 'Forecast weather'
     },{
     pattern : '\\b(temperature)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>now|today|currently)',
@@ -48,10 +48,10 @@ const patternDict = [{
     pattern :'\\b(temperature)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>tomorrow)',
     intent : 'Forecast temperature'
     },{
-    pattern : '\\b(temperature)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\d)\\s(?<hrs>days|hours)',
+    pattern : '\\b(temperature)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
     intent : 'Forecast temperature'
     },{
-    pattern : '\\b(temperature)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\d)\\s(?<hrs>days|hours)',
+    pattern : '\\b(temperature)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
     intent : 'Forecast temperature'
     },{
     pattern : '\\b(air pollution)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>now|today|currently)',
