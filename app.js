@@ -28,7 +28,7 @@ rl.on('line', reply => {
                 console.log('You have successfully left the channel');
                 process.exit();
 
-            case 'current temperature':
+            case 'Current temperature':
                 rl.setPrompt('');
                 weather.getWeather(cb.entities.city).then(res => {
 
@@ -42,7 +42,7 @@ rl.on('line', reply => {
                 });
                 break;
             
-            case 'forecast temperature':
+            case 'Forecast temperature':
                 rl.setPrompt('');
                 weather.getForecast(cb.entities.city).then(res => {
 
@@ -58,7 +58,7 @@ rl.on('line', reply => {
                 });
                 break;
 
-            case 'forecast weather':
+            case 'Forecast weather':
                 rl.setPrompt('');
                 weather.getForecast(cb.entities.city).then(res => {
 
@@ -77,19 +77,15 @@ rl.on('line', reply => {
                     rl.prompt();
                 });
                 break;
-            case 'current weather':
+            case 'Current weather':
                 rl.setPrompt('');
                 weather.getWeather(cb.entities.city).then(res => {
 
                     //var date = getDate(cb.entities.time);
                     var desc = res.weather.description 
                 
-
                     var temp = res.main.temp - 273.15;
                     var temp_style = getTemperatureStyle(temp);
-
-
-                    //console.log(`In ${res.city.name} ${cb.entities.time}, the temperature is  \x1b[1m\x1b[5m${getTemperatureExpression(temp)} with (\x1b[1m\x1b[5m${temp_style}${temp.toFixed(1)}°C\x1b[0m). There will be \x1b[1m\x1b[5m${sep}${desc}\x1b[0m. (data from ${date})\n`);
                     console.log(res.weather['description'])
                     console.log(`It is \x1b[1m\x1b[5m${getTemperatureExpression(temp)} in ${res.name}, with \x1b[1m\x1b[5m${temp_style}${temp.toFixed(1)}°C\x1b[0m.\n`);
                     
@@ -110,7 +106,6 @@ rl.on('line', reply => {
                     // var desc = jp.query(res, `$.list[?(@.dt_txt == "${date}")].daily.uvi`)[0]; // jsonpath query
                     // var sep = desc[-1] == 's' ? '' : 'a ';
 
-
                     // console.log(`In ${res.city.name}, the UV ${sep}${desc}\x1b[0m. (data from ${date})\n`);
         
                     })
@@ -120,11 +115,11 @@ rl.on('line', reply => {
                 
                 });
                 break;
-            case 'air pollution':
+            case 'Current air pollution':
                 rl.setPrompt('');
                 weather.getWeather(cb.entities.city).then(res => {
+                    
 
-                    const
                     //var date = getDate(cb.entities.time);
                     var long = res.coord.lon
                     var lat = res.coord.lat
@@ -142,6 +137,25 @@ rl.on('line', reply => {
 
                 
                 });
+                case 'Forecast air pollution':
+                    rl.setPrompt('');
+                    weather.getWeather(cb.entities.city).then(res => {
+                        
+                        var long = res.coord.lon
+                        var lat = res.coord.lat
+                        const airPollutionLevels = ["Good", "Fair", "Moderate","Poor","Very Poor"];
+                        weather.getAirpollution(lat,long).then(res =>{
+                        
+                        var pollution=airPollutionLevels[res.list[cb.entities.hrs].main.aqi-1]
+                        var timestamp = res.list[0].dt*1000
+                        var date = new Date(timestamp);
+                        console.log(`In ${cb.entities.city}, the air pollution is ${pollution}\x1b[0m. (data from ${date.toLocaleString()})\n`);
+                        rl.setPrompt('> ');
+                        rl.prompt(); 
+                    
+                         })
+    
+                    });   
                 break;
             default:
                 console.log('I did not understand your resquest, please try again. accepted: [feature] [in] [city name]');
