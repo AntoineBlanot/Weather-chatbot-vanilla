@@ -1,35 +1,56 @@
+/*
+IHere bellow are the patterns and associated intent that we created.
+Given that our knowledge about regex is still at an intermediate level we chose to elaborate multiple regex patterns to match
+differents patterns with the same intent instead of over-complexifying an unique regex. 
+For each intent 2 to 4 patterns were implemented.
+
+*/ 
+
+
 const patternDict = [{
         pattern : '\\b(?<greeting>Hi|Hello|Hey|Good morning|Good afternoon)\\b',
         intent : 'Hello'
-    }, {
-        pattern :'\\b(bye|exit)\\b',
+    }, 
+    {
+        pattern :'\\b(bye|exit|finish|end|stop)\\b',
         intent : 'Exit'
     },{
-    pattern : '\\b(weather)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>now|today|currently)',
-    intent : 'Current weather'},
+    pattern : '\\b(?<greeting>Help|Helps|Aide|Aides)\\b',
+    intent : 'help'
+    },
+
+    
+    // Current Weather 4 patterns
     {
-    pattern : '\\b(weather)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>now|today|currently)',
+    pattern : '\\b(weather)\\s(like\\s)*in\\s\\b(?<city>[A-Za-z]+([A-Za-z]+)?)\\s\\b(?<time>now|today|currently)',
+    intent : 'Current weather'
+    },{
+    pattern : '\\b(weather)\\s(like\\s)*\\b(?<city>[A-Za-z]+([A-Za-z]+)?)\\s\\b(?<time>now|today|currently)',
     intent : 'Current weather'
     },{
     pattern : '\\b(?<time>current)\\s\\b(weather)\\sin\\s\\b(?<city>[A-Za-z\\s]+)',
     intent : 'Current weather'
-
     },{
     pattern:'\\b(?<time>current)\\s\\b(weather)\\s\\b(?<city>[A-Za-z\\s]+)',
     intent : 'Current weather'
+
+    // Forecast weather 
     },{
     pattern : '\\b(weather)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>tomorrow)',
-    intent : 'Forecast weather'
+    intent : 'Forecast tomorrow weather'
     },{
     pattern : '\\b(weather)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>tomorrow)',
-    intent : 'Forecast weather'
+    intent : 'Forecast tomorrow weather'
     },{
-    pattern : '\\b(weather)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
+    pattern : '\\b(weather)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d\\d?\\d?)\\s(?<hrs>days|hours)',
     intent :'Forecast weather'
     },{
-    pattern : '\\b(weather)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
+    pattern : '\\b(weather)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d\\d?\\d?)\\s(?<hrs>days|hours)',
     intent : 'Forecast weather'
-    },{
+    },
+
+    // Current temperature
+    {
     pattern : '\\b(temperature)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>now|today|currently)',
     intent : 'Current temperature'
     },{
@@ -41,44 +62,81 @@ const patternDict = [{
     },{
     pattern : '\\b(?<time>current)\\s\\b(temperature)\\s\\b(?<city>[A-Za-z\\s]+)',
     intent : 'Current temperature'
-    },{
+    },
+
+    //Forecast temperature with 2 intents to simplify the app.js
+    {
     pattern : '\\b(temperature)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>tomorrow)',
-    intent : 'Forecast temperature'
+    intent : 'Forecast tomorrow temperature'
     },{
     pattern :'\\b(temperature)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>tomorrow)',
+    intent : 'Forecast tomorrow temperature'
+    },{
+    pattern : '\\b(temperature)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d\\d?\\d?)\\s(?<hrs>days|hours)',
     intent : 'Forecast temperature'
     },{
-    pattern : '\\b(temperature)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
+    pattern : '\\b(temperature)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d\\d?\\d?)\\s(?<hrs>days|hours)',
     intent : 'Forecast temperature'
-    },{
-    pattern : '\\b(temperature)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
-    intent : 'Forecast temperature'
-    },{
-    pattern : '\\b(air pollution)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>now|today|currently)',
-    intent : 'Current air pollution'
-    },{
-    pattern : '\\b(air pollution)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>now|today|currently)',
-    intent : 'Current air pollution'
-    },{
-    pattern : '\\b(?<time>current)\\s\\b(air pollution)\\sin\\s\\b(?<city>[A-Za-z\\s]+)',
-    intent :'Current air pollution'
-    },{
-    pattern : '\\b(?<time>current)\\s\\b(air pollution)\\s\\b(?<city>[A-Za-z\\s]+)',
-    intent : 'Current air pollution'
-    },{
-    pattern : '\\b(air pollution)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>tomorrow)',
-    intent : 'Forecast tomorrow air pollution'
-    },{
-    pattern : '\\b(air pollution)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>tomorrow)',
-    intent :'Forecast tomorrow air pollution'
-    },{
-    pattern : '\\b(air pollution)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
-    intent : 'Forecast air pollution'
-    },{
-    pattern : '\\b(air pollution)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d)\\s(?<hrs>days|hours)',
-    intent : 'Forecast air pollution'
-}]
-
-   
+    },
     
+    // Current air quality
+    {
+    pattern : '\\b(air pollution|quality)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>now|today|currently)',
+    intent : 'Current air quality'
+    },{
+    pattern : '\\b(air pollution|quality)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>now|today|currently)',
+    intent : 'Current air quality'
+    },{
+    pattern : '\\b(?<time>current)\\s\\b(air pollution|quality)\\sin\\s\\b(?<city>[A-Za-z\\s]+)',
+    intent :'Current air quality'
+    },{
+    pattern : '\\b(?<time>current)\\s\\b(air pollution|quality)\\s\\b(?<city>[A-Za-z\\s]+)',
+    intent : 'Current air quality'
+    },
+    
+    // // Forecast air pollution with 2 intents for easier management
+    {
+    pattern : '\\b(air pollution|quality)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>tomorrow)',
+    intent : 'Forecast tomorrow air quality'
+    },{
+    pattern : '\\b(air pollution|quality)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\s\\b(?<time>tomorrow)',
+    intent :'Forecast tomorrow air quality'
+    },{
+    pattern : '\\b(air pollution|quality)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d\\d?\\d?)\\s(?<hrs>days|hours)',
+    intent : 'Forecast air quality'
+    },{
+    pattern : '\\b(air pollution|quality)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za -z]+)?)\\sin\\s\\b(?<time>\\d\\d?\\d?)\\s(?<hrs>days|hours)',
+    intent : 'Forecast air quality'
+    },
+    
+    // Current uv index
+    {
+    pattern : '\\b(uv index|score)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za-z]+)?)\\s\\b(?<time>now|today|currently)',
+    intent : 'Current uv index'
+    },{
+    pattern : '\\b(uv index|score)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za-z]+)?)\\s\\b(?<time>now|today|currently)',
+    intent : 'Current uv index'
+    },{
+    pattern : '\\b(?<time>current)\\s\\b(uv index|score)\\sin\\s\\b(?<city>[A-Za-z\\s]+)',
+    intent :'Current uv index'
+    },{
+    pattern : '\\b(?<time>current)\\s\\b(uv index|score)\\s\\b(?<city>[A-Za-z\\s]+)',
+    intent : 'Current uv index'
+    },
+    
+    // Forecast uv index with 2 intents for easier management
+    {
+    pattern : '\\b(uv index|score)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za-z]+)?)\\s\\b(?<time>tomorrow)',
+    intent : 'Forecast tomorrow uv index'
+    },{
+    pattern : '\\b(uv index|score)\\s(like\\s)*\\b(?<city>[A-Za -z]+([A-Za-z]+)?)\\s\\b(?<time>tomorrow)',
+    intent :'Forecast tomorrow uv index'
+    },{
+    pattern : '\\b(uv index|score)\\s(like\\s)*in\\s\\b(?<city>[A-Za -z]+([A-Za-z]+)?)\\sin\\s\\b(?<time>\\d\\d?\\d?)\\s(?<hrs>days|hours)',
+    intent : 'Forecast uv index'
+    },{
+    pattern : '\\b(uv index|score)\\s(like\\s)*\\b(?<city>[A-Za-z]+([A-Za-z]+)?)\\sin\\s\\b(?<time>\\d\\d?\\d?)\\s(?<hrs>days|hours)',
+    intent : 'Forecast uv index'
+}]
+  
 module.exports = patternDict;

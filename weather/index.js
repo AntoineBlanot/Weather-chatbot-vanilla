@@ -6,16 +6,13 @@ const getWeather = location => {
     return new Promise(async(resolve, reject) => {
         try {
             const weatherConditions = await axios.get('https://api.openweathermap.org/data/2.5/weather',
-
             {
                 params : {
                     q: location,
                     appid: apikey
             }
         });
-
-        resolve(weatherConditions.data) // returns back the results to the chatbot
-        
+        resolve(weatherConditions.data) // returns back the results to the chatbot   
     }
     catch (error) {
         reject(error);
@@ -27,7 +24,6 @@ const getForecast = (location, n_forecast = 0) => {
     return new Promise(async(resolve, reject) => {
         try {
             const weatherConditions = await axios.get('https://api.openweathermap.org/data/2.5/forecast',
-
             {
                 params : {
                     q: location,
@@ -35,9 +31,7 @@ const getForecast = (location, n_forecast = 0) => {
                     appid: apikey
             }
         });
-
-        resolve(weatherConditions.data) // returns back the results to the chatbot
-        
+        resolve(weatherConditions.data) // returns back the results to the chatbot  
     }
     catch (error) {
         reject(error);
@@ -65,7 +59,7 @@ const getForecast = (location, n_forecast = 0) => {
         }
   });
 }
-  const getAirpollution = (latitude,longitude) => {
+  const getAirquality = (latitude,longitude) => {
     return new Promise(async(resolve, reject) => {
         try {
             const weatherConditions = await axios.get('http://api.openweathermap.org/data/2.5/air_pollution/forecast',
@@ -77,9 +71,7 @@ const getForecast = (location, n_forecast = 0) => {
                     appid: apikey
             }
         });
-
-        resolve(weatherConditions.data) // returns back the results to the chatbot
-        
+        resolve(weatherConditions.data) // returns back the results to the chatbot  
     }
     catch (error) {
         reject(error);
@@ -88,5 +80,5 @@ const getForecast = (location, n_forecast = 0) => {
   } 
 
 module.exports = { 
-    getWeather, getForecast, getUVindex, getAirpollution 
+    getWeather, getForecast, getUVindex, getAirquality
 };
